@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-5n#@do_@sqzmz_qs#gzlm2mt=^+52^b@os01z8l$yyxnasg+=&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com']
 
 #CustomUser model
 
