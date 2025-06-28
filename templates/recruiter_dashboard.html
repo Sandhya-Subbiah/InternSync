@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Recruiter Dashboard | InternSync{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-2">Welcome, {{ user.username }}!</h1>
+            <p class="lead">Manage your internship postings and track applicants through the recruitment process.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-6 col-md-3">
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-block">Edit Company Profile</a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{% url 'create_job' %}" class="btn btn-primary btn-block">Post New Opportunity</a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h2 class="card-title display-4">{{ stats.active_jobs_count }}</h2>
+                    <p class="card-text">Active Positions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h2 class="card-title display-4">{{ stats.total_applications }}</h2>
+                    <p class="card-text">Total Applicants</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h2 class="card-title display-4">{{ stats.in_process_count }}</h2>
+                    <p class="card-text">In Process</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h2 class="card-title display-4">{{ stats.positions_filled }}</h2>
+                    <p class="card-text">Positions Filled</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Jobs Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Active Internship Positions</h5>
+                    <a href="{% url 'all_applications' %}" class="btn btn-sm btn-outline-primary">Manage All</a>
+                </div>
+                <div class="card-body">
+                    {% if active_jobs %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>Applications</th>
+                                        <th>Posted On</th>
+                                        <th>Deadline</th>
+                                        <th>Status</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for job in active_jobs %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ job.title }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ job.location }}</small>
+                                        </td>
+                                        <td>{{ job.applications_count }}</td>
+                                        <td>{{ job.posted_date|date:"M d, Y" }}</td>
+                                        <td>{{ job.last_date_to_apply|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if job.is_active %}
+                                                <span class="badge bg-primary">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <div class="mb-3">
+                                <i class="fa fa-briefcase fa-3x text-muted"></i>
+                            </div>
+                            <h5>No active positions</h5>
+                            <p class="text-muted">Post your first internship opportunity to get started</p>
+                            <a href="{% url 'create_job' %}" class="btn btn-primary mt-2">Post New Opportunity</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Applications Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Applications</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filter by Status
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}">All Applications</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=pending">New</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=shortlisted_oa">Shortlisted</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=completed_oa">Assessment</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=shortlisted_interview">Interview</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=selected">Selected</a>
+                            <a class="dropdown-item" href="{% url 'recruiter_dashboard' %}?status=rejected">Rejected</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recent_applications %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Applicant</th>
+                                        <th>Position</th>
+                                        <th>Applied On</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for app in recent_applications %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if app.student.profile_pic %}
+                                                    <img src="{{ app.student.profile_pic.url }}" alt="Profile" class="rounded-circle mr-2" style="width: 40px; height: 40px;">
+                                                {% else %}
+                                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mr-2" style="width: 40px; height: 40px;">
+                                                        <i class="fa fa-user"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <strong>{{ app.student.user.get_full_name }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">{{ app.student.university }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ app.job.title }}</td>
+                                        <td>{{ app.applied_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if app.status == 'pending' %}
+                                                <span class="badge bg-info text-dark">New</span>
+                                            {% elif app.status == 'under_review' %}
+                                                <span class="badge bg-secondary">Under Review</span>
+                                            {% elif app.status == 'shortlisted_oa' %}
+                                                <span class="badge bg-primary">Shortlisted</span>
+                                            {% elif app.status == 'completed_oa' %}
+                                                <span class="badge bg-warning text-dark">Assessment</span>
+                                            {% elif app.status == 'shortlisted_interview' %}
+                                                <span class="badge bg-dark">Interview</span>
+                                            {% elif app.status == 'selected' %}
+                                                <span class="badge bg-success">Selected</span>
+                                            {% elif app.status == 'rejected' %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>                                        
+                                        <td>
+                                            <div class="d-grid gap-1">
+                                                <a href="{% url 'download_cv' app.id %}" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fa fa-download"></i> CV
+                                                </a>
+                                                
+                                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                                    <a href="{% url 'update_application_status' app.id 'under_review' %}" class="btn btn-sm btn-outline-secondary">Review</a>
+                                                    <a href="{% url 'update_application_status' app.id 'shortlisted_oa' %}" class="btn btn-sm btn-outline-primary">Shortlist</a>
+                                                    <a href="{% url 'update_application_status' app.id 'completed_oa' %}" class="btn btn-sm btn-outline-info">Assessment</a>
+                                                    <a href="{% url 'update_application_status' app.id 'shortlisted_interview' %}" class="btn btn-sm btn-outline-dark">Interview</a>
+                                                    <a href="{% url 'update_application_status' app.id 'selected' %}" class="btn btn-sm btn-outline-success">Select</a>
+                                                    <a href="{% url 'update_application_status' app.id 'rejected' %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <div class="mb-3">
+                                <i class="fa fa-users fa-3x text-muted"></i>
+                            </div>
+                            <h5>No applications received yet</h5>
+                            <p class="text-muted">Once students apply to your positions, they will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if recent_applications %}
+                <div class="card-footer text-center">
+                    <a href="{% url 'all_applications' %}" class="btn btn-outline-primary">View All Applications</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

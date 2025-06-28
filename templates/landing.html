@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+
+{% block title %}InternSync - Launch Your Career{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5 animate-fade-in" style="background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);">
+    <div class="container text-center py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-white">
+                <h1 class="display-4 fw-bold mb-4">Launch Your Career with InternSync</h1>
+                <p class="lead mb-4">Connecting talented students with top companies for meaningful internship experiences. Take the first step towards your dream career today.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg px-4">Get Started</a>
+                    <a href="/jobs" class="btn btn-outline-light btn-lg px-4">Browse Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="display-4 text-secondary mb-2">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="fw-bold">10,000+</h3>
+                    <p class="text-muted">Students Placed</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="display-4 text-secondary mb-2">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="fw-bold">500+</h3>
+                    <p class="text-muted">Partner Companies</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="display-4 text-secondary mb-2">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="fw-bold">5,000+</h3>
+                    <p class="text-muted">Active Opportunities</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-heading text-center mb-5">How InternSync Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-plus text-white fa-2x"></i>
+                    </div>
+                    <h4>1. Create Profile</h4>
+                    <p class="text-muted">Sign up and create your professional profile with your skills, education, and experience.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-file-alt text-white fa-2x"></i>
+                    </div>
+                    <h4>2. Upload CV</h4>
+                    <p class="text-muted">Upload your CV to showcase your qualifications and get verified by our team.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-rocket text-white fa-2x"></i>
+                    </div>
+                    <h4>3. Apply & Connect</h4>
+                    <p class="text-muted">Browse opportunities, apply for positions, and connect directly with company recruiters.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Jobs -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-heading mb-0">Featured Opportunities</h2>
+            <a href="/jobs" class="btn btn-outline-primary">View All</a>
+        </div>
+        <div class="row g-4">
+            <!-- Job Card 1 -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light rounded p-2 me-3">
+                                <i class="fab fa-google fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Software Engineering Intern</h5>
+                                <p class="text-muted mb-0">Google</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2">Full-time</span>
+                            <span class="badge bg-light text-dark">Remote</span>
+                        </div>
+                        <p class="card-text">Join our team to develop cutting-edge technology solutions while learning from industry experts.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success"><i class="fas fa-dollar-sign me-1"></i>2000/month</span>
+                            <span class="text-muted">Posted 2 days ago</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-primary w-100">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job Card 2 -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light rounded p-2 me-3">
+                                <i class="fab fa-microsoft fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Data Science Intern</h5>
+                                <p class="text-muted mb-0">Microsoft</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2">6 months</span>
+                            <span class="badge bg-light text-dark">Hybrid</span>
+                        </div>
+                        <p class="card-text">Work with large datasets and ML models to drive business insights and product improvements.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success"><i class="fas fa-dollar-sign me-1"></i>2500/month</span>
+                            <span class="text-muted">Posted 1 week ago</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-primary w-100">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job Card 3 -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light rounded p-2 me-3">
+                                <i class="fab fa-amazon fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Marketing Intern</h5>
+                                <p class="text-muted mb-0">Amazon</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2">3 months</span>
+                            <span class="badge bg-light text-dark">On-site</span>
+                        </div>
+                        <p class="card-text">Drive marketing campaigns and gain hands-on experience with digital marketing strategies.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success"><i class="fas fa-dollar-sign me-1"></i>1800/month</span>
+                            <span class="text-muted">Posted 3 days ago</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-primary w-100">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-heading text-center mb-5">Success Stories</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Student">
+                        <h5>Sarah Johnson</h5>
+                        <p class="text-muted">Computer Science, MIT</p>
+                        <p>"InternSync helped me land my dream internship at Google, which later turned into a full-time offer. The platform made it easy to showcase my skills directly to recruiters."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Student">
+                        <h5>Michael Chen</h5>
+                        <p class="text-muted">Business Analytics, NYU</p>
+                        <p>"I had been applying for internships for months with no luck. Within two weeks of using InternSync, I had three interviews and landed a position at a Fortune 500 company."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Student">
+                        <h5>Priya Patel</h5>
+                        <p class="text-muted">Mechanical Engineering, Stanford</p>
+                        <p>"The CV verification process gave me credibility with employers. I received offers from companies that typically wouldn't consider students from my background."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partner Companies -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="section-heading mb-5">Trusted by Leading Companies</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col">
+                <i class="fab fa-google fa-3x text-secondary"></i>
+            </div>
+            <div class="col">
+                <i class="fab fa-microsoft fa-3x text-secondary"></i>
+            </div>
+            <div class="col">
+                <i class="fab fa-amazon fa-3x text-secondary"></i>
+            </div>
+            <div class="col">
+                <i class="fab fa-apple fa-3x text-secondary"></i>
+            </div>
+            <div class="col">
+                <i class="fab fa-facebook fa-3x text-secondary"></i>
+            </div>
+            <div class="col">
+                <i class="fab fa-ibm fa-3x text-secondary"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center py-4">
+        <h2 class="fw-bold mb-4">Ready to Start Your Career Journey?</h2>
+        <p class="lead mb-4">Join thousands of students who found their dream internships through InternSync</p>
+        <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5">Sign Up Now</a>
+    </div>
+</section>
+{% endblock %}

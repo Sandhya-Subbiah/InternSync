@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4">Job Opportunities</h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control" placeholder="Search by title, position, company..." value="{{ request.GET.search|default:'' }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="location" class="form-select">
+                                <option value="">All Locations</option>
+                                {% for location in locations %}
+                                    <option value="{{ location }}" {% if request.GET.location == location %}selected{% endif %}>{{ location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="selection_type" class="form-select">
+                                <option value="">All Selection Types</option>
+                                <option value="normal" {% if request.GET.selection_type == 'normal' %}selected{% endif %}>Normal Selection</option>
+                                <option value="fast_track" {% if request.GET.selection_type == 'fast_track' %}selected{% endif %}>Fast Track</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if jobs %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for job in jobs %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">{{ job.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">{{ job.recruiter.company_name }}</h6>
+                            <div class="mb-3">
+                                <span class="badge bg-info me-2">{{ job.position }}</span>
+                                <span class="badge bg-secondary me-2">{{ job.location }}</span>
+                                <span class="badge {% if job.selection_type == 'fast_track' %}bg-warning{% else %}bg-primary{% endif %} me-2">
+                                    {{ job.get_selection_type_display }}
+                                </span>
+                            </div>
+                            <p class="card-text">{{ job.description|truncatewords:30 }}</p>
+                            <div class="small text-muted mb-3">
+                                <div><strong>Posted:</strong> {{ job.posted_date|date:"M d, Y" }}</div>
+                                <div><strong>Apply by:</strong> {{ job.last_date_to_apply|date:"M d, Y" }}</div>
+                                {% if job.salary_range %}
+                                    <div><strong>Salary:</strong> {{ job.salary_range }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if job.id in applied_job_ids %}
+                                <button class="btn btn-success disabled w-100">Already Applied</button>
+                            {% else %}
+                                <a href="{% url 'apply_job' job.id %}" class="btn btn-primary w-100">Apply Now</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if jobs.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if jobs.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ jobs.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.selection_type %}&selection_type={{ request.GET.selection_type }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for i in jobs.paginator.page_range %}
+                        {% if jobs.number == i %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.selection_type %}&selection_type={{ request.GET.selection_type }}{% endif %}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if jobs.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ jobs.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.selection_type %}&selection_type={{ request.GET.selection_type }}{% endif %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No jobs match your search criteria. Try different keywords or filters.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

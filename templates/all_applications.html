@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Applications | InternSync{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-2">All Applications</h1>
+            <p class="lead">Manage all applications across your job postings</p>
+        </div>
+    </div>
+
+    <!-- Filter section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="jobFilter" class="form-label">Filter by Position</label>
+                    <select class="form-select" id="jobFilter" name="job">
+                        <option value="">All Positions</option>
+                        {% for job in jobs %}
+                            <option value="{{ job.id }}" {% if request.GET.job == job.id|stringformat:"i" %}selected{% endif %}>
+                                {{ job.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="statusFilter" class="form-label">Filter by Status</label>
+                    <select class="form-select" id="statusFilter" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>New</option>
+                        <option value="under_review" {% if request.GET.status == 'under_review' %}selected{% endif %}>Under Review</option>
+                        <option value="shortlisted_oa" {% if request.GET.status == 'shortlisted_oa' %}selected{% endif %}>Shortlisted</option>
+                        <option value="completed_oa" {% if request.GET.status == 'completed_oa' %}selected{% endif %}>Assessment</option>
+                        <option value="shortlisted_interview" {% if request.GET.status == 'shortlisted_interview' %}selected{% endif %}>Interview</option>
+                        <option value="selected" {% if request.GET.status == 'selected' %}selected{% endif %}>Selected</option>
+                        <option value="rejected" {% if request.GET.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end mb-3">
+                    <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
+                    <a href="{% url 'all_applications' %}" class="btn btn-outline-secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="card">
+        <div class="card-body">
+            {% if applications %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Applicant</th>
+                                <th>Position</th>
+                                <th>Applied On</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if app.student.profile_pic %}
+                                            <img src="{{ app.student.profile_pic.url }}" alt="Profile" class="rounded-circle mr-2" style="width: 40px; height: 40px;">
+                                        {% else %}
+                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mr-2" style="width: 40px; height: 40px;">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ app.student.user.get_full_name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ app.student.university }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ app.job.title }}</td>
+                                <td>{{ app.applied_date|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if app.status == 'pending' %}
+                                        <span class="badge bg-info text-dark">New</span>
+                                    {% elif app.status == 'under_review' %}
+                                        <span class="badge bg-secondary">Under Review</span>
+                                    {% elif app.status == 'shortlisted_oa' %}
+                                        <span class="badge bg-primary">Shortlisted</span>
+                                    {% elif app.status == 'completed_oa' %}
+                                        <span class="badge bg-warning text-dark">Assessment</span>
+                                    {% elif app.status == 'shortlisted_interview' %}
+                                        <span class="badge bg-dark">Interview</span>
+                                    {% elif app.status == 'selected' %}
+                                        <span class="badge bg-success">Selected</span>
+                                    {% elif app.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% endif %}
+                                </td> 
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="actionDropdown-{{ app.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Review
+                                        </button>
+                                        <td>
+                                            <div class="d-grid gap-1">
+                                                <a href="{% url 'download_cv' app.id %}" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fa fa-download"></i> CV
+                                                </a>
+                                                
+                                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                                    <a href="{% url 'update_application_status' app.id 'under_review' %}" class="btn btn-sm btn-outline-secondary">Review</a>
+                                                    <a href="{% url 'update_application_status' app.id 'shortlisted_oa' %}" class="btn btn-sm btn-outline-primary">Shortlist</a>
+                                                    <a href="{% url 'update_application_status' app.id 'completed_oa' %}" class="btn btn-sm btn-outline-info">Assessment</a>
+                                                    <a href="{% url 'update_application_status' app.id 'shortlisted_interview' %}" class="btn btn-sm btn-outline-dark">Interview</a>
+                                                    <a href="{% url 'update_application_status' app.id 'selected' %}" class="btn btn-sm btn-outline-success">Select</a>
+                                                    <a href="{% url 'update_application_status' app.id 'rejected' %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <div class="mb-3">
+                        <i class="fa fa-users fa-3x text-muted"></i>
+                    </div>
+                    <h5>No applications found</h5>
+                    <p class="text-muted">There are no applications matching your filter criteria</p>
+                    {% if request.GET %}
+                        <a href="{% url 'all_applications' %}" class="btn btn-outline-primary mt-2">Clear Filters</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if applications.has_other_pages %}
+    <nav aria-label="Applications pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if applications.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ applications.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for i in applications.paginator.page_range %}
+                {% if applications.number == i %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if applications.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ applications.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

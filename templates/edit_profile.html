@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Edit Profile</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h4 class="mb-3">Account Information</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.username.id_for_label }}" class="form-label">Username</label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}
+                                    <div class="text-danger">{{ user_form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger">{{ user_form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        {% if user.is_student %}
+                            <h4 class="mb-3">Student Information</h4>
+                            <div class="mb-4">
+                                <label for="{{ profile_form.cv.id_for_label }}" class="form-label">CV Document</label>
+                                {{ profile_form.cv }}
+                                {% if profile_form.cv.errors %}
+                                    <div class="text-danger">{{ profile_form.cv.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Please upload your CV in PDF, DOC, or DOCX format (Max size: 5MB)</div>
+                                {% if user.student.cv %}
+                                    <div class="mt-2">
+                                        <span class="badge bg-success">Current CV: {{ user.student.cv.name|slice:"9:" }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if user.student.cv_approved_status %}
+                                <div class="alert alert-success">
+                                    <i class="bi bi-check-circle-fill"></i> Your CV has been approved
+                                </div>
+                            {% elif user.student.cv %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Your CV is pending approval
+                                </div>
+                            {% endif %}
+                            
+                        {% elif user.is_recruiter %}
+                            <h4 class="mb-3">Recruiter Information</h4>
+                            <div class="mb-4">
+                                <label for="{{ profile_form.company_name.id_for_label }}" class="form-label">Company Name</label>
+                                {{ profile_form.company_name }}
+                                {% if profile_form.company_name.errors %}
+                                    <div class="text-danger">{{ profile_form.company_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

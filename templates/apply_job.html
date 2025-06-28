@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Apply for Job: {{ job.title }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <div class="job-details mb-4">
+                        <h4>Job Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Company:</strong> {{ job.recruiter.company_name }}</p>
+                                <p><strong>Position:</strong> {{ job.position }}</p>
+                                <p><strong>Location:</strong> {{ job.location }}</p>
+                                {% if job.salary_range %}
+                                    <p><strong>Salary Range:</strong> {{ job.salary_range }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Posted:</strong> {{ job.posted_date|date:"F d, Y" }}</p>
+                                <p><strong>Last Date to Apply:</strong> {{ job.last_date_to_apply|date:"F d, Y" }}</p>
+                                <p><strong>Selection Process:</strong> {{ job.get_selection_type_display }}</p>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-3">Job Description</h5>
+                        <div class="job-description mb-3">
+                            {{ job.description|linebreaks }}
+                        </div>
+                        
+                        <h5>Eligibility Criteria</h5>
+                        <div class="job-criteria mb-4">
+                            {{ job.criteria|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    {% if not has_cv %}
+                        <div class="alert alert-warning">
+                            <strong>CV Required:</strong> You need to upload your CV before applying. <a href="{% url 'edit_profile' %}" class="alert-link">Upload CV</a>
+                        </div>
+                    {% elif not cv_approved %}
+                        <div class="alert alert-warning">
+                            <strong>CV Approval Pending:</strong> Your CV is pending approval. You can still apply, but your application will be considered only after CV approval.
+                        </div>
+                    {% endif %}
+                    
+                    {% if can_apply %}
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="{{ form.preference_order.id_for_label }}" class="form-label">Preference Order (If applying to multiple jobs)</label>
+                                {{ form.preference_order }}
+                                {% if form.preference_order.errors %}
+                                    <div class="text-danger">{{ form.preference_order.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Indicate your priority for this job (1 being highest preference)</div>
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="confirm-eligibility" required>
+                                <label class="form-check-label" for="confirm-eligibility">
+                                    I confirm that I meet all the eligibility criteria for this job
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Submit Application</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-primary">Complete Profile First</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
